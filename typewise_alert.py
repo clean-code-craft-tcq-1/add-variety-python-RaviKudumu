@@ -1,8 +1,3 @@
-temperature_limits = {
-'PASSIVE': {'coolingType': 'PASSIVE_COOLING' },
-'HI_ACTIVE': {'coolingType': 'HI_ACTIVE_COOLING' },
-'MED_ACTIVE': {'coolingType': 'MED_ACTIVE_COOLING' }
-}
 cooling_type_limits = {
 'PASSIVE_COOLING': {'low': 0, 'high':35 },
 'HI_ACTIVE_COOLING': {'low': 0, 'high':45 },
@@ -39,7 +34,8 @@ receiver = {
   "TO_CONTROLLER": send_to_controller,
   "TO_EMAIL" : send_to_email
 }
-def check_and_alert(alertTarget, batteryChar, temperatureInC):
+def check_and_alert(alertTarget, coolingType, temperatureInC):
   breachType =\
-    classify_temperature_breach(batteryChar['coolingType'], temperatureInC)
+    classify_temperature_breach(coolingType, temperatureInC)
   receiver[alertTarget](breachType)
+  return breachType
