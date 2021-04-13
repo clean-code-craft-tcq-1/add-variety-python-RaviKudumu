@@ -21,19 +21,33 @@ def classify_temperature_breach(coolingType, temperatureInC):
   return infer_breach(temperatureInC, lowerLimit, upperLimit)
 
 def send_to_controller(breachType):
-  header = 0xfeed
-  print(f'{header}, {breachType}')
-  return breachType, 'Controller'
+  send_status_to_controller(breachType)
+
+
+
 
 def send_to_console(breachType):
-  print(breachType)
-  return breachType, 'Console'
+  send_status_to_console(breachType)
+
 
 def send_to_email(breachType):
+  send_status_email(breachType)
+
+
+def send_status_to_controller(breachType):
+  header = 0xfeed
+  print(f'{header}, {breachType}')
+  return breachType
+
+def send_status_email(breachType):
   recepient = "a.b@c.com"
   print(f'To: {recepient}')
   print('Hi, the temperature is {}'.format(boundary_constants_text[breachType]))
-  return breachType, 'Email'
+  return breachType
+
+def send_status_to_console(breachType):
+  print(breachType)
+  return breachType
 
 receiver = {
   "TO_CONTROLLER": send_to_controller,
@@ -43,4 +57,5 @@ receiver = {
 def check_and_alert(alertTarget, coolingType, temperatureInC):
   breachType =\
     classify_temperature_breach(coolingType, temperatureInC)
-  return receiver[alertTarget](breachType)
+  receiver[alertTarget](breachType)
+  return breachType
